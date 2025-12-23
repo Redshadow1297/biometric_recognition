@@ -11,28 +11,26 @@ class BiometricAuthDemo extends StatefulWidget {
 class _BiometricAuthDemoState extends State<BiometricAuthDemo> {
   final LocalAuthentication auth = LocalAuthentication();
 
-  List<BiometricType> availableBiometrics = [];  // Add this line to store available biometrics
+  List<BiometricType> availableBiometrics =
+      []; // Add this line to store available biometrics
   String authStatus = "Not Authenticated";
 
   @override
   void initState() {
     super.initState();
-    _checkBiometrics();  // Check available biometrics on init  
+    _checkBiometrics(); // Check available biometrics on init
   }
 
-
-   Future<void> _checkBiometrics() async {
+  Future<void> _checkBiometrics() async {
     try {
       availableBiometrics = await auth.getAvailableBiometrics();
-      setState(() {});  // Update UI
+      setState(() {}); // Update UI
     } catch (e) {
       debugPrint("Biometrics check error: $e");
     }
   }
 
-
-
-   Future<void> authenticateUser() async {
+  Future<void> authenticateUser() async {
     try {
       final canCheck = await auth.canCheckBiometrics;
       final isSupported = await auth.isDeviceSupported();
@@ -47,7 +45,8 @@ class _BiometricAuthDemoState extends State<BiometricAuthDemo> {
 
       String biometricType = "Biometric";
 
-      if (biometrics.contains(BiometricType.iris)) {               //iris scans the eyes and get authenticated for both face and fingerprint
+      if (biometrics.contains(BiometricType.iris)) {
+        //iris scans the eyes and get authenticated for both face and fingerprint
         biometricType = "Iris Authentication";
       }
       // if (biometrics.contains(BiometricType.face)) {   //Fingerprint Authentication
@@ -122,10 +121,12 @@ class _BiometricAuthDemoState extends State<BiometricAuthDemo> {
             Text(authStatus, style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 30),
             ElevatedButton.icon(
-    onPressed: authenticateUser,
-    icon: Icon(biometricIcon(availableBiometrics)),  // Pass real biometrics
-    label: const Text("Authenticate"),
-  ),
+              onPressed: authenticateUser,
+              icon: Icon(
+                biometricIcon(availableBiometrics),
+              ), // Pass real biometrics
+              label: const Text("Authenticate"),
+            ),
           ],
         ),
       ),
