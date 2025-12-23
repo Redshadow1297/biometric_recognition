@@ -10,7 +10,27 @@ class BiometricAuthDemo extends StatefulWidget {
 
 class _BiometricAuthDemoState extends State<BiometricAuthDemo> {
   final LocalAuthentication auth = LocalAuthentication();
+
+  List<BiometricType> availableBiometrics = [];  // Add this line to store available biometrics
   String authStatus = "Not Authenticated";
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBiometrics();  // Check available biometrics on init  
+  }
+
+
+   Future<void> _checkBiometrics() async {
+    try {
+      availableBiometrics = await auth.getAvailableBiometrics();
+      setState(() {});  // Update UI
+    } catch (e) {
+      debugPrint("Biometrics check error: $e");
+    }
+  }
+
+
 
    Future<void> authenticateUser() async {
     try {
@@ -102,13 +122,10 @@ class _BiometricAuthDemoState extends State<BiometricAuthDemo> {
             Text(authStatus, style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 30),
             ElevatedButton.icon(
-              onPressed: authenticateUser,
-              // onPressed: authenticateFaceOnly,
-              icon: biometricIcon([]) != null
-                  ? Icon(biometricIcon([]))
-                  : const Icon(Icons.lock),
-              label: const Text("Authenticate"),
-            ),
+    onPressed: authenticateUser,
+    icon: Icon(biometricIcon(availableBiometrics)),  // Pass real biometrics
+    label: const Text("Authenticate"),
+  ),
           ],
         ),
       ),
